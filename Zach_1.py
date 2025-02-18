@@ -61,4 +61,4 @@ def arctan(x, y):                       #Arcustangens
             alpha=math.atan(y/x) + 2*math.pi
     return alpha 
 
-print(arctan(30,90))
+
