@@ -1,4 +1,75 @@
 import math
+#import matplotlib.pyplot as plt #Plotter, um Bilder zu erstellen
+import random
+
+#********************************************************************************************#
+#                  D  A  T  E  I  W  E  R  T  E     L  A  D  E  N                            #
+#********************************************************************************************#
+
+def is_number(str):                     #testet, ob ein gegebener String sich in eine Float verwandeln läßt oder nicht.
+    try:
+        float(str)
+        return True
+    except ValueError:
+        return False
+
+# Laedt eine gegebene Datei in ein Array
+# filename      String 
+# return        Array von gegebenem Typ.
+def load_file(filename):                #Ziel ist es, dass die Messzahlen von Messung 1 und dann Messung 2 reingeladen werden
+    fobj = open(filename, "r")          #...deshalb zuerst öffnen und einlesen; "r" =read, also einlesen
+
+    hilfsarray=[]
+    for line in fobj:
+        str = line.strip();             #hier eine Analyse, um zu testen ob es sich bei dem String um eine Zahl handelt
+                                        #wenn nicht, würde das Programm in der nächste Zeile aussteigen.
+        if(len(str) > 0 and is_number(str)): 
+            x = float(str)
+            hilfsarray.append(x)
+                                        #lese die 1.Zahl aus der Datei in das Hilfsarray
+                                        #line ist ein String (da alles was aus der Datei im txt-Modus gelesen wird ein String ist)
+                                        # float(...) konvertiert die Zeile in eine Zahl. Dazu müssen die nicht sichtbaren Hilfszeichen aber gelöscht werden
+                                        #[Variable vom Typ String].strip löscht alle nicht sichtbaren Zeichen vor und hinter der Zeile
+    fobj.close()                        # die gesamte Datei ist in einem Hilfsarray, jede Zeile wird von einem Block repräsentiert
+                                        # nun sind 2 weitere Hilfsarrays zu konstruieren, die je einen Vektor aufnehmen koennen
+
+    length = len(hilfsarray)            #wie viele Informationen sind in dem Hilfsarray?
+    i = 0                               #eine Zählervariable um zu wissen in welcher Zeile man in der Datei ist
+    file_array = []                     #Das Array in dem hinterher die gesamten Doppelvektoren dieser Datei gespeichert werden
+
+    while(i<length):                    #hilfssarray = datei die geladen wird
+        vec_hilfsarray_a = []           #initialisiert das Vektor Hilfsarray a 
+        vec_hilfsarray_a.append(hilfsarray[i]) 
+        i += 1
+        vec_hilfsarray_a.append(hilfsarray[i])
+        i += 1
+        vec_hilfsarray_a.append(hilfsarray[i])
+        i += 1
+        
+        vec_hilfsarray_b = []           #initialisiert das Vektor Hilfsarray b
+        vec_hilfsarray_b.append(hilfsarray[i])
+        i += 1
+        vec_hilfsarray_b.append(hilfsarray[i])
+        i += 1
+        vec_hilfsarray_b.append(hilfsarray[i])
+        i += 1
+                                        # ... fülle die beiden Vektor - Hilfsarrays mit den Informationen aus dem Datei Hilfsarray
+        element = []
+        element.append(vec_hilfsarray_a)
+        element.append(vec_hilfsarray_b)#... und so weiter (mit vec_hilfsarray_b)
+                                        #damit hat man den Doppelvektor mit dem Namen Element
+        file_array.append(element)
+                                        
+    return file_array;
+
+print(load_file("Messung_1.txt"))
+print("-------------------------")
+print(load_file("Messung_2.txt"))
+
+#********************************************************************************************#
+#                       F  U  N  K  T  I  O  N  E  N                                         #
+#********************************************************************************************#
+
 
 # Subtrahiert 2 Vektoren voneinander
 # vec_a         Array[number, number, number]   Minuend  
