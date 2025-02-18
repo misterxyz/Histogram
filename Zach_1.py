@@ -1,6 +1,7 @@
 import math
 #import matplotlib.pyplot as plt #Plotter, um Bilder zu erstellen
 import random
+#Array ist vom Typ = [[[[],[]],[[],[]]]]
 
 #********************************************************************************************#
 #                  D  A  T  E  I  W  E  R  T  E     L  A  D  E  N                            #
@@ -62,9 +63,7 @@ def load_file(filename):                #Ziel ist es, dass die Messzahlen von Me
                                         
     return file_array;
 
-print(load_file("Messung_1.txt"))
-print("-------------------------")
-print(load_file("Messung_2.txt"))
+# so soll das aussehen: Array = [[[[1.0,2.0,3.0],[1,2,1]] , [[7.0,7.0,7.0],[1,2,3]]] , [[[1.2,1.9,3.2],[1,8,9]] , [[6.7,7.1,6.5],[7,7,9]]]]
 
 #********************************************************************************************#
 #                       F  U  N  K  T  I  O  N  E  N                                         #
@@ -133,3 +132,47 @@ def arctan(x, y):                       #Arcustangens
     return alpha 
 
 
+#********************************************************************************************#
+#                         H A U P T - P R O G R A M M                                        #
+#********************************************************************************************#
+
+def findfirstbigger(number,numlist):	#geht Liste durch und gibt Index der ersten Zahl aus numlist zurück die größer als number ist
+    for i,q in enumerate(numlist):
+        if q>=number:
+            return i
+    return len(numlist)
+
+
+templimits = [-0.6,-0.2,0.2,0.6]
+LIMITS = [[i*math.pi for i in templimits],templimits,templimits,[0.2,0.4,0.6,0.8]]  #Liste von Liste von Zahlen, bezieht sich auf alpha BIS delta
+
+class Feature(object):		    #alle Feature Objekte haben diese Funktionen	
+                                    #"Class Feature (object [object heißt es erbt von Keinem])" hat 4 Eigenschaften, nämlich alpha, beta, gamma, delta							
+    
+    def __init__(self,alpha,beta,gamma,delta):  #Konstruktor Eigenschaften:1.)erstellt EIN Objekt, in diesem Objekt sind alpha bis delta// Konstruktor, wegen Stichwort "__init__" 	
+        self.alpha = alpha                      #Konstruktor Eigenschaften: 2.)bekommt Argumente uebergeben (alpha bis delta) 
+        self.beta = beta                        #Konstruktor Eigenschaften: 3.)die 4 Eigenschaften werden im neuen Objekt gespeichert
+        self.gamma = gamma                      #Alpha bis Delta sind die 4 Eigenschaften des Objekts
+        self.delta = delta
+        
+    #bekommt EIN Feature Objekt von jedem, der diese Funktion aufruft
+    #nimmt dieses Objekt und gibt die 4 Eigenschaften davon als Liste zurück  
+    def aslist(self):
+        return [self.alpha,self.beta,self.gamma,self.delta]
+
+    #Erzeugt aus Features die Bin ID von einem Eintrag
+    #Addiert alle Einträge von alpha bis delta zusammen und erstellt so die ID
+    def genBinID(self):																		
+        ret=[0]*IDLENGTH				#erstellt eine mit 0 vorinitialisierte Liste
+        for feature,zahl in enumerate(self.aslist()):	#"self.aslist" gibt eine Liste zurueck mit den Eiträgen alpha bis delta....bis jetzt haben wir 2 verschiedene Listen
+            ret[findfirstbigger(zahl,LIMITS[feature])]+=1 #erhöht die auf 0 vorinitialisierte Liste an der richtigen Stelle um 1
+        return ret
+    
+    def __str__(self, *args, **kwargs):						#Funktion, die ein Feature (was ja ein Objekt ist), in einen String umwandelt
+        return "Feature(Alpha: "+str(self.alpha)+"; Beta: "+str(self.beta)+"; Gamma: "+str(self.gamma)+"; Delta: "+str(self.delta)+")"	#das ist der String
+    
+    def __repr__(self, *args, **kwargs):					#gibt einen String zurueck
+        return str(self)
+
+Array = [load_file("Messung_1.txt"), load_file("Messung_2.txt")]
+print(Array)
