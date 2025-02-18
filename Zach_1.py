@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+
 import math
-#import matplotlib.pyplot as plt #Plotter, um Bilder zu erstellen
+import matplotlib.pyplot as plt #Plotter, um Bilder zu erstellen
 import random
 #Array ist vom Typ = [[[[],[]],[[],[]]]]
 
@@ -17,7 +19,7 @@ def is_number(str):                     #testet, ob ein gegebener String sich in
 # Laedt eine gegebene Datei in ein Array
 # filename      String 
 # return        Array von gegebenem Typ.
-def load_file(filename):                #Ziel ist es, dass die Messzahlen von Messung 1 und dann Messung 2 reingeladen werden
+def load_file(filename):                #Ziel ist es, dass die Meßszahlen von Messung 1 und dann Messung 2 reingeladen werden
     fobj = open(filename, "r")          #...deshalb zuerst öffnen und einlesen; "r" =read, also einlesen
 
     hilfsarray=[]
@@ -62,7 +64,7 @@ def load_file(filename):                #Ziel ist es, dass die Messzahlen von Me
         file_array.append(element)
                                         
     return file_array;
-
+    
 # so soll das aussehen: Array = [[[[1.0,2.0,3.0],[1,2,1]] , [[7.0,7.0,7.0],[1,2,3]]] , [[[1.2,1.9,3.2],[1,8,9]] , [[6.7,7.1,6.5],[7,7,9]]]]
 
 #********************************************************************************************#
@@ -80,7 +82,7 @@ def vec_op_minus(vec_a, vec_b):                 #Vektorsubtraktion
     vec_c[1] = vec_a[1]-vec_b[1]
     vec_c[2] = vec_a[2]-vec_b[2]
     return vec_c
-
+    
 # Berechnet das Skalarprodukt von 2 Vektoren
 # vec_a         Array[number, number, number]   1.Vektor  
 # vec_b         Array[number, number, number]   2.Vektor 
@@ -88,14 +90,14 @@ def vec_op_minus(vec_a, vec_b):                 #Vektorsubtraktion
 def vec_op_sp (vec_a, vec_b):                  #Skalarprodukt
     ret = vec_a[0]*vec_b[0]+vec_a[1]*vec_b[1]+vec_a[2]*vec_b[2]
     return ret
-
+    
 # Berechnet die Euklidische Norm, also die Laenge von 1 Vektor
 # vec_a         Array[number, number, number]   Eingabevektor 
 # return ret    Ergebnis(Länge)[number]        Euklidische Norm, also die Laenge des Vektors
 def vec_op_euk (vec_a):                        #Euklidische Norm
     ret=(vec_a[0]*vec_a[0]+vec_a[1]*vec_a[1]+vec_a[2]*vec_a[2])**0.5  #**0.5 bedeutet Wurzel
     return ret
-
+    
 # Berechnet das Kreuzprodukt von 2 Vektoren
 # vec_a     Array[number, number, number]   1.Vektor  
 # vec_b     Array[number, number, number]   2.Vektor 
@@ -131,7 +133,7 @@ def arctan(x, y):                       #Arcustangens
             alpha=math.atan(y/x) + 2*math.pi
     return alpha 
 
-
+    
 #********************************************************************************************#
 #                         H A U P T - P R O G R A M M                                        #
 #********************************************************************************************#
@@ -226,7 +228,7 @@ def IDtoindex(ID):
 
 for i in range(2):
     print("Features für Histogramm "+str(i)+": "+str(S[i]))
-
+    
 class Histogram(object):				#neues Objekt "Histogramm"
     
     def __init__(self,listoffeatures):		        #neuer Konstruktor fürs Objekt "Histogramm"
@@ -264,6 +266,7 @@ class Histogram(object):				#neues Objekt "Histogramm"
         ret = Histogram(None)	    		#erstelle ein neues Histogramm "ret" (bisher ist es leer)"
         ret.hist=q[:random.randint(0,len(q))]	#das neue, leere Histogramm wird nun mit den permutierten Bins gefüllt
         return ret
+
                                                 #bisher wurden Objekte erstellt und gesagt, wie sie miteinander interagieren; jetzt benutzen wir sie
 H=[Histogram(S[i]) for i in range(2)]		#erstellt 2 bereits volle 625er-Histogramme
 
@@ -279,11 +282,6 @@ for i in range(len(H)):		#gibt die beiden Histogramme numerisch aus
     print(H[i])			#benutzt die obige Funktion "__str__(self, *args, **kwargs)" (siehe oben)
 
 print("Phase 1 vorbei, jetzt Phase 2, also die Kriterien")
-
-#***************************************************************#
-#                         K R I T E R I E N                     #
-#***************************************************************#
-
 
 class Kriterium(object):
 
