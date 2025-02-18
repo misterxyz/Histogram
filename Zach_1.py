@@ -19,4 +19,11 @@ def vec_op_sp (vec_a, vec_b):                  #Skalarprodukt
     ret = vec_a[0]*vec_b[0]+vec_a[1]*vec_b[1]+vec_a[2]*vec_b[2]
     return ret
 
-print(vec_op_sp ([1,2,3], [4,5,6]))
+# Berechnet die Euklidische Norm, also die Laenge von 1 Vektor
+# vec_a         Array[number, number, number]   Eingabevektor 
+# return ret    Ergebnis(Länge)[number]        Euklidische Norm, also die Laenge des Vektors
+def vec_op_euk (vec_a):                        #Euklidische Norm
+    ret=(vec_a[0]*vec_a[0]+vec_a[1]*vec_a[1]+vec_a[2]*vec_a[2])**0.5  #**0.5 bedeutet Wurzel
+    return ret
+
+print(vec_op_euk([2,3,4]))
