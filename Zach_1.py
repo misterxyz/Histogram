@@ -37,4 +37,15 @@ def vec_op_cross(vec_a, vec_b):             #Kreuzprodukt
     vec_c[2] = vec_a[0]*vec_b[1]-vec_a[1]*vec_b[0]
     return vec_c
 
-print(vec_op_cross([1,2,3], [4,5,6]))
+#Berechnet die Skalarmultiplikation zwischen einem Skalar und einem Vektor
+#l      integer, oder numbering-Zahl    Skalar
+#vec    Array[number, number, number]   Eingabektor, d.h. der zu skalierende Vektor 
+#vec_c  Array[number, number, number]   Ergebnisvektor, d.h. der skalierte Vektor
+def vec_op_skal_mul(l, vec):            #Skalarmultiplikation eines Vektors
+    vec_c = [0.0,0.0,0.0]
+    vec_c[0]=l*vec[0]
+    vec_c[1]=l*vec[1]
+    vec_c[2]=l*vec[2]
+    return vec_c
+
+print(vec_op_skal_mul(4, [1,2,3]))
