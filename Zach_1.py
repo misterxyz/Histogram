@@ -264,7 +264,6 @@ class Histogram(object):				#neues Objekt "Histogramm"
         ret = Histogram(None)	    		#erstelle ein neues Histogramm "ret" (bisher ist es leer)"
         ret.hist=q[:random.randint(0,len(q))]	#das neue, leere Histogramm wird nun mit den permutierten Bins gefüllt
         return ret
-
                                                 #bisher wurden Objekte erstellt und gesagt, wie sie miteinander interagieren; jetzt benutzen wir sie
 H=[Histogram(S[i]) for i in range(2)]		#erstellt 2 bereits volle 625er-Histogramme
 
@@ -280,3 +279,48 @@ for i in range(len(H)):		#gibt die beiden Histogramme numerisch aus
     print(H[i])			#benutzt die obige Funktion "__str__(self, *args, **kwargs)" (siehe oben)
 
 print("Phase 1 vorbei, jetzt Phase 2, also die Kriterien")
+
+#***************************************************************#
+#                         K R I T E R I E N                     #
+#***************************************************************#
+
+
+class Kriterium(object):
+
+    #bei allen Funktionen wird erst definiert, was sie überhaupt tun sollen; solange sie nicht aufgerufen werden, passiert erst mal gar nichts
+    #das ist der Konstruktor (Stichwort: "__init__"): erstellt ein Objekt, instanziert die Klasse und bekommt Argumente übergeben 
+    #bekommt folgende Argumente übergeben: 1.) EINE Funktion 2.)EIN Histogramm 3.)noch ein Histogramm 4.)eine ID, d.h. eine Zahl, um zu sagen, welches Kriterium gerade dran ist  
+    def __init__(self,function,histogram1,histogram2,idn=0):					
+        self.summe=0	#Summe wird anfangs auf 0 gesetzt, d.h. vorinitialisiert														
+        self.id=idn	#wird auf die gegebene ID gesetzt
+        for eintrag1,eintrag2 in zip(histogram1.hist,histogram2.hist):	#beide Histogramme geht man gleichzeitig durch, d.h. GLEICHZEITIG den i.-ten Eintrag vom 1. UND GLEICHZEITIG von 2. Histogramm
+            self.summe+=function(eintrag1,eintrag2)	#die hier noch nicht naeher definierte Funktion ruft beide Einträge auf, d.h. f(x1,y1) ; f(x2,y2) ; usw. und das wird aufaddiert
+
+
+    def __str__(self, *args, **kwargs):	#wir haben ein Ergebnis von einem Kriterium und das geben wir jetzt als String aus
+        return "Kriterium "+str(self.id)+": "+str(self.summe)				
+
+
+#da ja jetzt die Klasse fertig ist, wird der Code jetzt sofort ausgeführt und jetzt werden die Klassen benutzt
+#alle Kriterien
+kriterien = [
+             min,
+             lambda a,b:(a-b)**2,	    			#1.Kriterium
+             lambda a,b:((a-b)**2)/a,			    	#2.Kriterium
+             lambda a,b:((a-b)**2)/(a+b),			#3.Kriterium
+             lambda a,b:(b-a)*math.log(b/a),			#4.Kriterium
+             ]
+
+for i in range(len(kriterien)):	                    #alle Kriterien durchgehen
+    print(Kriterium(kriterien[i],H[0],H[1],idn=i))  #erstellt die Kriterien und gibt/druckt sie aus: der Konstruktor der "Kriterium-Klasse" wird aufgerufen, d.h. die Klasse "Kriterium" wird hier erstmalig benutzt
+                                                    #Kriteriumobjekte werden erstellt ; als Ergebnis sind die Kriteriumobjekte da
+    
+#und für das letzte nochmal aber mit einem zufälligen subset
+lastcriteria = lambda a,b:math.log(b)
+subsetH = [h.getSubset() for h in H]
+
+print(Kriterium(lastcriteria,subsetH[0],subsetH[1],6))
+print(Kriterium(lastcriteria,subsetH[1],subsetH[0],7))
+
+print("Warte mit beenden bis alle Plots geschlossen sind...")
+plt.show()
