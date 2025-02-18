@@ -48,4 +48,17 @@ def vec_op_skal_mul(l, vec):            #Skalarmultiplikation eines Vektors
     vec_c[2]=l*vec[2]
     return vec_c
 
-print(vec_op_skal_mul(4, [1,2,3]))
+#Berechnet den Arcustangens von 2 Zahlen
+#x      number
+#y      number
+#alpha  Ergebnis, also der Arcustangens von x und y
+def arctan(x, y):                       #Arcustangens
+    if (x>0) and (y>0):                 #gemäß Vorgabe im Artikel
+            alpha=math.atan(y/x)
+    elif (x<0):
+        alpha=math.atan(y/x) +   math.pi
+    else:
+            alpha=math.atan(y/x) + 2*math.pi
+    return alpha 
+
+print(arctan(30,90))
