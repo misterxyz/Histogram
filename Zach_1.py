@@ -226,3 +226,55 @@ def IDtoindex(ID):
 
 for i in range(2):
     print("Features für Histogramm "+str(i)+": "+str(S[i]))
+
+class Histogram(object):				#neues Objekt "Histogramm"
+    
+    def __init__(self,listoffeatures):		        #neuer Konstruktor fürs Objekt "Histogramm"
+        self.hist=[0]*625				#Eigenschaft "hist": Diese Eigenschaft ist eine Liste; jedes Listenelement steht für eine Bin; "self.list" ist eine Liste (Eigenschaft) von 625 Bins, die zunächst alle =0 sind
+        if listoffeatures is not None:			#wenn diese Liste von Features tatsächlich existiert (diese Zeile ist nur zur Sicherheit: Wenn die Liste inexistent ist, mache gar nichts, d.h. leeres Histogramm)
+            self.divider = len(listoffeatures)	
+            for feature in listoffeatures:		#gehe alle Features durch
+                self.hist[IDtoindex(feature.genBinID())]+=1	#"feature.genBinID()" erzeugt vom aktuellen Feature die Bin ID; wird zu Index umgewandelt// "genBinID
+            for index in range(len(self.hist)):	        #gehe alle 625 Bins durch
+                self.hist[index]/=self.divider		#dividiert durch die Anzahl der Features, damit die Histogrammeinträge nicht zu groß sind; allerdings bleiben die Nullerbins auch weiterhin Nullerbins 
+    
+    def setmin(self,minimum):				#füllt leergebliebene Bins
+        mini = minimum/self.divider			#dividiert das kleinste, nichtleere Bin durch die Anzahl der Features
+        for index,eintrag in enumerate(self.hist):
+            if eintrag==0:
+                self.hist[index]=mini			#wenn 0 dann wird der bin auf m gesetzt
+                
+    def plot(self,fignum=1,style="."):		        #macht ein Histogrammbild aus den bisherigen Daten
+        fig=plt.figure(fignum)				
+        plt.xlabel("Bin ID")
+        plt.title("Histogramm "+str(fignum))
+        plt.grid(True)
+        plt.ylabel("Bin content")
+        fig.subplots_adjust(top=0.95,left=0.05,right=0.95,bottom=0.2)
+        step=8
+        plt.xticks(range(0,len(self.hist),step),[str(list(indexToID(i))) for i in range(0,len(self.hist),step)],rotation='vertical')
+        plt.plot(self.hist,".")
+
+    def __str__(self, *args, **kwargs):		#konvetriert ein Histogramm in einen String nur zum Anzeigen: das ist sozusagen das Histogramm als String ausgegeben 
+        return str(self.hist)
+    
+    def getSubset(self):			#gibt eine zufällige Histogrammuntermenge zurück; wird fürs letzte Kriterium gebraucht
+        q = self.hist[:]		    	#ist eine Kopie von den 625 Bins
+        random.shuffle(q)	    		#nimmt die Kopie und permutiert zufällig
+        ret = Histogram(None)	    		#erstelle ein neues Histogramm "ret" (bisher ist es leer)"
+        ret.hist=q[:random.randint(0,len(q))]	#das neue, leere Histogramm wird nun mit den permutierten Bins gefüllt
+        return ret
+
+                                                #bisher wurden Objekte erstellt und gesagt, wie sie miteinander interagieren; jetzt benutzen wir sie
+H=[Histogram(S[i]) for i in range(2)]		#erstellt 2 bereits volle 625er-Histogramme
+
+m = max(1,min([i for i in H[0].hist if i!=0]+[i for i in H[1].hist if i!=0])-1)		#findet EIN Minimum der beiden Histogramme >=1, d.h. der kleinste gefüllte Wert -1
+for h in H:			#geht beide Histogramme durch
+    h.setmin(m)		        #benutzt die oben definierte Funktion "setmin"; wenn diese Zeile bearbeitet ist, ist in KEINEM Histogramm mehr irgendetwas auf 0
+    
+H[0].plot()			#gibt die beiden Histogramme zeichnerisch aus
+H[1].plot(2,"r.")		#hier das 2. Histogramm, allerdings diesmal mit roten Symbolen
+
+for i in range(len(H)):		#gibt die beiden Histogramme numerisch aus
+    print("Histogramm "+str(i+1)+":")											
+    print(H[i])			#benutzt die obige Funktion "__str__(self, *args, **kwargs)" (siehe oben)
