@@ -278,3 +278,5 @@ H[1].plot(2,"r.")		#hier das 2. Histogramm, allerdings diesmal mit roten Symbole
 for i in range(len(H)):		#gibt die beiden Histogramme numerisch aus
     print("Histogramm "+str(i+1)+":")											
     print(H[i])			#benutzt die obige Funktion "__str__(self, *args, **kwargs)" (siehe oben)
+
+print("Phase 1 vorbei, jetzt Phase 2, also die Kriterien")
