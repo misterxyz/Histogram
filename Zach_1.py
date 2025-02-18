@@ -175,4 +175,54 @@ class Feature(object):		    #alle Feature Objekte haben diese Funktionen
         return str(self)
 
 Array = [load_file("Messung_1.txt"), load_file("Messung_2.txt")]
-print(Array)
+
+n = len(Array[1])
+S = [[],[]]     #S ist eine Liste von Listen von Features. S[0] ist die Liste von Features Datei 1. S[1] von Datei 2.
+
+for t in range(0,2):                                	    		#zuerst Array 1, dann Array 2 durchgehen, also die jeweilige Messung
+    for i in range(0,n):    						#innerhalb des Arrays 1 bzw. 2 (=Messung) die einzelnen Messungspunkte durchgehen
+        vec_p = Array[t][i][0]                      			#  = "p1" zur Zeit, also allgemein p "aktuell"
+        vec_n = Array[t][i][1]                      			#  = "n1" zur Zeit, also allgemein n "aktuell" 
+        for j in range(i+1,n):              				#Vergleich von Messpunkt "aktuell" (i) mit "aktuell+1" (j)
+            p_vgl = vec_op_minus(Array[t][j][0] , vec_p)        	# wie im Artikel p2-p1, also allgemein p "aktuell+1" - p "aktuell"
+            s_links = abs(vec_op_sp(vec_n , p_vgl))                 	# wie im Artikel |n1 ° (p2-p1)|, hier in allgemeiner Form
+            s_rechts = abs(vec_op_sp(Array[t][j][1] , p_vgl))           # wie im Artikel |n2 ° (p2-p1)|, hier in allgemeiner Form
+            if(s_links <= s_rechts):                			#siehe Bedingungsvorgabe im Artikel, was nun als Ursprung definiert wird
+                    origin = vec_p
+            else:
+                    origin = Array[t][j][0]
+            Array[t][j][0]=vec_op_minus(Array[t][j][0] , origin)	#gemeint ist hierbei ganz einfach: p2' := p2 - p1
+            u=vec_n         						#für alles, was nun kommt: entweder u,v,w[i] oder u,v,w[j], je nach Schleifendurchgang
+            v=vec_op_skal_mul((1 / vec_op_euk(vec_op_cross(p_vgl , u))) , vec_op_cross(p_vgl , u))
+            w=vec_op_cross(u,v)
+            alpha = arctan(vec_op_sp(w,Array[t][j][1]) , vec_op_sp(u , Array[t][j][1]))
+            beta=vec_op_sp(v,Array[t][j][1])
+            gamma=vec_op_sp(u,vec_op_skal_mul(1/vec_op_euk(p_vgl) , p_vgl))
+            delta=vec_op_euk(p_vgl)
+            S[t].append(Feature(alpha , beta , gamma , delta))  #1 Einheit "alpha, beta, gamma, delta" soll EIN Feature sein
+                                                    #der Konstruktor "Feature" wird aufgerufen und das Ergebnis (was ja ein Objekt ist) wird in der Liste "S[t]" gespeichert
+         
+IDLENGTH = 5    #Anzahl der Zahlen in einer ID eines Bins
+IDMAXINT = 4    #im Grunde die Anzahl der Zahlen eines Features; wie hoch ist der maximale Eintrag einer ID ? 
+                #IDs sind Listen von zahlen. Z.B.: [0,0,0,1] bezieht sich auf Index 1.
+
+#Konvertiert ein Array-Index in eine ID
+#macht z.B. aus 32 [0,0,2,0,0] 
+def indexToID(index):
+    ret=[]
+    for _ in range(IDLENGTH):
+        div,mod = divmod(index,IDMAXINT)
+        index=div
+        ret.append(mod)
+    return reversed(ret)
+
+#Konvertiert eine ID in eine Arrayindex
+#macht z.B. aus [0,0,2,0,0] 32
+def IDtoindex(ID):
+    ret=0
+    for index,stelle in enumerate(reversed(ID)):
+        ret+=stelle*(IDMAXINT**index)
+    return ret
+
+for i in range(2):
+    print("Features für Histogramm "+str(i)+": "+str(S[i]))
